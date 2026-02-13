@@ -1,207 +1,151 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>GamePot JS SDK Sandbox</title>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>GamePot JS SDK Sandbox</title>
+      <meta charset="utf-8" />
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, shrink-to-fit=no"
+      />
 
-    <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-      crossorigin="anonymous"
-    />
-    <!-- <script src="https://kr.object.ncloudstorage.com/gamepot/v1/dev/gamepot-sdk-javascript.min.js"></script> -->
-    <!-- <script src="https://cdn.gamepot.io/release/gamepot-sdk-javascript-lastest.min.js"></script>-->
-    <!-- <script src="https://gamepot.gcdn.ntruss.com/gamepot-sdk-javascript-lastest.min.js"></script>-->
-    <!-- <script src="https://kr.object.ncloudstorage.com/gamepot/v1/dev/gamepot-sdk-javascript.min.js"></script>-->
-    <!-- <script src="https://cdn.gamepot.io/dev/gamepot-sdk-javascript-1.0.29.min.js"></script>-->
-    <!-- <script src="https://cdn.gamepot.io/dev/gamepot-sdk-javascript-1.0.21.min.js"></script>-->
-    <!-- <script src="https://cdn.gamepot.io/dev/gamepot-sdk-javascript-1.0.19-b1.min.js"></script>-->
-    <!--<script src="https://gamepot.gcdn.ntruss.com/gamepot-sdk-javascript-1.0.17.min.js"></script>-->
-    <!-- <script src="https://cdn.gamepot.io/dev/gamepot-sdk-javascript-1.0.15.min.js"></script>-->
-    <!-- <script src="https://cdn.gamepot.io/dev/gamepot-sdk-javascript-1.0.1.min.js"></script> -->
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+      <link
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+        crossorigin="anonymous"
+      />
 
-    <!-- 250217_Gravity ROV -->
-    <!-- <script src="https://gamepot.gcdn.ntruss.com/dev/gamepot-sdk-javascript-1.0.38.min.js"></script> -->
-    <script src="https://gamepot.gcdn.ntruss.com/dev/gamepot-sdk-javascript-1.0.44.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- IE 11 을 위한 추가 -->
-    <script src="https://cdn.jsdelivr.net/bluebird/latest/bluebird.min.js"></script>
-  </head>
+      <script src="https://gamepot.gcdn.ntruss.com/dev/gamepot-sdk-javascript-1.0.44.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/bluebird/latest/bluebird.min.js"></script>
+    </head>
 
-  <body class="container-fluid" style="margin-bottom: 200px;">
-    <script type="text/javascript">
-      function SignIn(channeltype) {
-        GP.login(channeltype, function (user, error) {
+    <body class="container-fluid" style="margin-bottom: 200px;">
+      <script type="text/javascript">
+        function SignIn(channeltype) {
+          window.GP.login(channeltype, function (user, error) {
+            if (error) {
+              alert(`${error.code}-${error.message}`);
+              console.log(error);
+            } else {
+              userId = user.id;
+              token = user.token;
+              alert(user.id);
+              alert(user.token);
+              console.log("user.id : " + user.id);
+              console.log("user.token : " + user.token);
+            }
+          });
+        }
+
+        function Logout() {
+          window.GP.logout(function (error) {
+            if (error) {
+              alert(error);
+            }
+          });
+        }
+
+        function deleteMember() {
+          if (!userId) {
+            alert("로그인을 먼저 해 주세요.");
+            return;
+          }
+          window.GP.deleteMember(userId, function (result, error) {
+            if (error) {
+              alert(error);
+            } else {
+              alert("회원탈퇴 성공!");
+            }
+          });
+        }
+
+        function onSignInGoogle(error, user) {
           if (error) {
-            // 로그아웃 실패
-            alert(`${error.code}-${error.message}`); // 오류 메세지
-            console.log(error);
+            alert(`${error.code}-${error.message}`);
           } else {
-            // 로그인 성공
+            console.log(user);
             userId = user.id;
             token = user.token;
-            alert(user.id);
-            alert(user.token);
-            console.log("user.id : " + user.id);
-            console.log("user.token : " + user.token);
-            // alert(user.projectId);
-            // alert(user.email);
-            // alert(user.agree);
-            // alert(user.verify);
+            alert("onSignInGoogle : " + user.id);
+            alert("onSignInGoogle : " + user.token);
           }
-        });
-        // GP.login(channeltype)
-        //   .then((user) => {
-        //     //user.id = GAMEPOT member_id
-        //     //user.token = GAMEPOT token
-        //     alert(
-        //       "로그인 성공-" +
-        //         user.id +
-        //         " // 토큰 :" +
-        //         user.token +
-        //         "// email :" +
-        //         user.email
-        //     );
-        //     // alert("로그인 성공-" + user.id);
-        //   })
-        //   .catch((error) => {
-        //     alert(
-        //       "Error: " + error.code + " \n error message " + error.message
-        //     );
-        //   });
-      }
-
-      function Logout() {
-        GP.logout(function (error) {
-          if (error) {
-            alert(error);
-          }
-        });
-      }
-
-      function deleteMember() {
-        if (!userId) {
-          alert("로그인을 먼저 해 주세요.");
-          return;
         }
-        GP.deleteMember(userId, function (result, error) {
-          if (error) {
-            // 회원탈퇴 실패
-            alert(error); // 오류 메세지
-          } else {
-            // 회원탈퇴 아웃 완료
-            alert("회원탈퇴 성공!");
-          }
-        });
-      }
 
-      function onSignInGoogle(error, user) {
-        if (error) {
-          // 로그인 실패
-          alert(`${error.code}-${error.message}`); // 오류 메세지
-        } else {
-          // 로그인 성공
-          console.log(user);
-          userId = user.id;
-          token = user.token;
-          alert("onSignInGoogle : " + user.id);
-          alert("onSignInGoogle : " + user.token);
-        }
-      }
+        window.onload = function () {
+          var project_id = "62a59b94-f4fd-4449-b954-b516828997b2";
 
-      window.onload = function () {
-        // 프로젝트 ID는 게임팟 대시보드에서 확인할 수 있습니다.
+          var gamepotConfig = {
+            api_url: "https://gpapps.gamepot.ntruss.com",
+            api_url: "https://gpapps.gamepot.ntruss.com",
+            api_key: "62dbac3d952054ca59407fbf",
+            google_signin_client_id: "852198240310-pjuifjsaa3d6hd3e2s9t7gu2ekpv4dt7.apps.googleusercontent.com",
+            facebook_app_id: "",
+            apple_client_id: "com.ultimategame.eternaltowersaga.auth",
+            apple_redirect_uri: "https://gamepot.apigw.ntruss.com/gpapps/sg-v1/v1/provider/apple/callback/62a59b94-f4fd-4449-b954-b516828997b2",
+            android_client_id: "",
+            line_channel_id: "",
+            line_client_id: "",
 
-        var project_id = "62a59b94-f4fd-4449-b954-b516828997b2";
-        
-        var gamepotConfig = {
-          // api_url: "https://gpapps.gamepot.ntruss.com",
-          // api_url: "https://gamepot.apigw.ntruss.com/gpapps/sg-v1",
-          api_url: "https://gpapps.gamepot.ntruss.com",
-          api_key: "62dbac3d952054ca59407fbf",
-          google_signin_client_id: "852198240310-pjuifjsaa3d6hd3e2s9t7gu2ekpv4dt7.apps.googleusercontent.com",
-          facebook_app_id: "",
-          apple_client_id: "com.ultimategame.eternaltowersaga.auth",
-          apple_redirect_uri: "https://gamepot.apigw.ntruss.com/gpapps/sg-v1/v1/provider/apple/callback/62a59b94-f4fd-4449-b954-b516828997b2",
-          android_client_id: "",
-          line_channel_id: "",
-          line_client_id: ""
+            google: {
+              callback: onSignInGoogle,
+              renderButton: "renderButton",
+              option: {
+                size: "large",
+                theme: "outline",
+                width: "400",
+                text: "signup_with",
+                shape: "rectangular",
+                logo_alignment: "center",
+                locale: "ko_KR"
+              }
+            }
+          };
 
-          // google: {
-          //   callback: onSignInGoogle, // callback 버튼
-          //   renderButton: "renderButton", // 버튼 DIV 이름
-          //   option: {
-          //     // google button option
-          //     size: "large",
-          //     theme: "outline",
-          //     width: "400",
-          //     text: "signup_with",
-          //     shape: "rectangular",
-          //     logo_alignment: "center",
-          //     locale: "ko_KR"
-          //     //locale: "ja_JP"
-          //   }
-          // }
+          window.GP.initialize(project_id, gamepotConfig);
         };
+      </script>
 
-        // var gamepotConfig = {
-        //   api_url: "https://gpapps.gamepot.ntruss.com",
-        //   google_signin_client_id:
-        //     "174271126062-qsj22ps3u794fee4n0ujr5oc49ucanpg.apps.googleusercontent.com",
-        //   facebook_app_id: "2476491385978147",
-        // apple_client_id: "com.itsb.samplelogin.delete",
-        //   apple_redirect_uri: "https://lx4fc.csb.app",
-        //   api_key: "922de31b167f9272bff16687b9e96ba7489af4535198a99c"
-        // };
-        GP.initialize(project_id, gamepotConfig);
-      };
-    </script>
-    <div>
-      <div>소셜 로그인</div>
-      <button
-        id="btn-signin-google"
-        class=""
-        onclick="SignIn(GP.ChannelType.GOOGLE)"
-      >
-        구글
-      </button>
+      <div>
+        <div>소셜 로그인</div>
+        <button
+          id="btn-signin-google"
+          class=""
+          onclick="SignIn(window.GP.ChannelType.GOOGLE)"
+        >
+          구글
+        </button>
 
-      <button
-        id="btn-signin-facebook"
-        class=""
-        onclick="SignIn(GP.ChannelType.FACEBOOK)"
-      >
-        페이스북
-      </button>
+        <button
+          id="btn-signin-facebook"
+          class=""
+          onclick="SignIn(window.GP.ChannelType.FACEBOOK)"
+        >
+          페이스북
+        </button>
 
-      <button
-        id="btn-signin-apple"
-        class=""
-        onclick="SignIn(GP.ChannelType.APPLE)"
-      >
-        애플
-      </button>
+        <button
+          id="btn-signin-apple"
+          class=""
+          onclick="SignIn(window.GP.ChannelType.APPLE)"
+        >
+          애플
+        </button>
 
-      <br /><br />
+        <br /><br />
 
-      <div id="renderButton"></div>
+        <div id="renderButton"></div>
 
-      <br /><br />
+        <br /><br />
 
-      <button id="btn-logout" class="" onclick="Logout()">로그아웃</button>
+        <button id="btn-logout" class="" onclick="Logout()">로그아웃</button>
 
-      <br /><br />
+        <br /><br />
 
-      <button id="btn-delete_memberid" class="" onclick="deleteMember()">
-        회원탈퇴
-      </button>
-    </div>
-    <pre id="debug-log" style="font-size: 0.5em;"></pre>
-  </body>
-</html>
+        <button id="btn-delete_memberid" class="" onclick="deleteMember()">
+          회원탈퇴
+        </button>
+      </div>
+      <pre id="debug-log" style="font-size: 0.5em;"></pre>
+    </body>
+  </html>
